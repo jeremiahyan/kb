@@ -22,7 +22,6 @@ AttributeError: module 'attr' has no attribute 's'
   
 **Reason:**   You are using an outdated version of either (or both) of the `attr` and/or `attrs` libraries.
 
-
 **Solution:** Try to force an upgrade on those packages by doing:
 
 `pip install -U attr`

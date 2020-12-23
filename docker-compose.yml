@@ -4,7 +4,7 @@ services:
   kb:
     build:
       context: ./
-      dockerfile: ./docker/cli/dockerfile
+      dockerfile: ./docker/dockerfile
     volumes:
       - ./docker/data:/data
     tty: true

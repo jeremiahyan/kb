@@ -2,6 +2,3 @@ attr
 attrs
 colored
 toml
-flask
-flask-httpauth
-MarkupSafe

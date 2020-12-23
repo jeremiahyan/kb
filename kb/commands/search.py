@@ -10,18 +10,17 @@ kb search command module
 :Copyright: © 2020, gnc.
 :License: GPLv3 (see /LICENSE).
 """
-import sys
-from typing import Dict
 
-from kb.actions.search import search_kb
-import kb.history as history
+from typing import Dict
+import kb.db as db
+import kb.initializer as initializer
 import kb.printer.search as printer
-import kb.printer.others as others
+import kb.history as history
 
 
 def search(args: Dict[str, str], config: Dict[str, str]):
     """
-    Search artifacts within the knowledge base of kb and display the output on the terminal.
+    Search artifacts within the knowledge base of kb.
 
     Arguments:
     args:           - a dictionary containing the following fields:
@@ -37,25 +36,31 @@ def search(args: Dict[str, str], config: Dict[str, str]):
                       PATH_KB_HIST      - the history menu path of KB
                       EDITOR            - the editor program to call
     """
+    # Check initialization
+    initializer.init(config)
 
-    result = search_kb(args, config)
+    tags_list = None
+    if args["tags"] and args["tags"] != "":
+        tags_list = args["tags"].split(';')
 
-    # List all categories
-    if args.get("all_categories", False) is True:
-        others.generate_list(args, result, 'Categories')
-        sys.exit(0)
+    conn = db.create_connection(config["PATH_KB_DB"])
+    rows = db.get_artifacts_by_filter(
+        conn,
+        title=args["query"],
+        category=args["category"],
+        tags=tags_list,
+        status=args["status"],
+        author=args["author"])
 
-    # List all tags
-    if args.get("all_tags", False) is True:
-        others.generate_list(args, result, 'Tags')
-        sys.exit(0)
+    # rows.sort(key=lambda x: x[1])
+    artifacts = sorted(rows, key=lambda x: x.title)
 
     # Write to history file
-    history.write(config["PATH_KB_HIST"], result)
+    history.write(config["PATH_KB_HIST"], artifacts)
 
     # Print resulting list
     color_mode = not args["no_color"]
     if args["verbose"]:
-        printer.print_search_result_verbose(result, color_mode)
+        printer.print_search_result_verbose(artifacts, color_mode)
     else:
-        printer.print_search_result(result, color_mode)
+        printer.print_search_result(artifacts, color_mode)

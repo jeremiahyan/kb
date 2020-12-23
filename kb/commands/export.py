@@ -11,8 +11,10 @@ kb export command module
 :License: GPLv3 (see /LICENSE).
 """
 
+import time
+import tarfile
+from pathlib import Path
 from typing import Dict
-from kb.actions.export import export_kb
 
 
 def export(args: Dict[str, str], config: Dict[str, str]):
@@ -27,5 +29,14 @@ def export(args: Dict[str, str], config: Dict[str, str]):
                       the following keys:
                       PATH_KB           - the main path of KB
     """
+    fname = args["file"] or time.strftime("%d_%m_%Y-%H%M%S")
+    archive_ext = ".kb.tar.gz"
+    if not fname.endswith(archive_ext):
+        fname = fname + archive_ext
 
-    return (export_kb(args, config=config))
+    if args["only_data"]:
+        with tarfile.open(fname, mode='w:gz') as archive:
+            archive.add(config["PATH_KB_DATA"], arcname="kb", recursive=True)
+    else:
+        with tarfile.open(fname, mode='w:gz') as archive:
+            archive.add(config["PATH_KB"], arcname=".kb", recursive=True)

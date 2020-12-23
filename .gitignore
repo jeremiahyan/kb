@@ -55,7 +55,3 @@ tests/data/
 # docker
 docker/data/*
 !docker/data/.gitkeep
-
-.vscode/settings.json
-
-.vscode/
