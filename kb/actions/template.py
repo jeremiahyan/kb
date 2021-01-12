@@ -45,7 +45,7 @@ def get_templates(templates_path: str) -> List[str]:
     return fs.list_files(templates_path)
 
 
-# def search(args: Dict[str, str], config: Dict[str, str]):
+def search(args: Dict[str, str], config: Dict[str, str]):
     """
     Search templates installed in kb.
 
