@@ -31,18 +31,16 @@ def generate_stats_header(
     Nothing - the screen printout is produced by this module
     """
     
-    header = "{kb_version}{api_version}     {last_date}    {categories}   {tags}   {artifacts}    {templates}".format(
-        kb_version="Versions:  KB/".rjust(9),
-        api_version="API".ljust(7),
+    header = "{kb_version}     {last_date}    {categories}   {tags}   {artifacts}    {templates}".format(
+        kb_version="Versions  KB/".rjust(9),
         last_date="Last updated".rjust(13),
         categories="Categories".ljust(7),
         tags="Tags".ljust(4),
         artifacts="Artifacts".ljust(7),
         templates="Templates".ljust(7))
 
-    summary = "{kb_version} / {api_version} {last_date} {categories} {tags} {artifacts} {templates}".format(
+    summary = "{kb_version {last_date} {categories} {tags} {artifacts} {templates}".format(
         kb_version=stats["Versions"]["kb"].ljust(7),
-        api_version=stats["Versions"]["kbAPI"].rjust(7),
         last_date=stats["lastUpdate"].rjust(22),
         categories=str(stats["CurrentStatistics"]["Categories"]["Total"]).rjust(7),
         tags=str(stats["CurrentStatistics"]["Tags"]["Total"]).rjust(9),

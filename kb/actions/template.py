@@ -5,7 +5,7 @@
 # See /LICENSE for licensing information.
 
 """
-kb template api module
+kb template actions module
 
 :Copyright: © 2020, alshapton.
 :License: GPLv3 (see /LICENSE).
@@ -23,7 +23,7 @@ import base64
 from flask import jsonify, make_response
 from werkzeug.utils import secure_filename
 
-from kb.api.constants import MIME_TYPE
+
 import kb.config as conf
 import kb.db as db
 from kb.entities.artifact import Artifact
@@ -57,7 +57,6 @@ def get_templates(templates_path: str) -> List[str]:
                       PATH_KB_TEMPLATES     - the path to where the templates of KB
                                               are stored
     """
-    # return(get_templates(config["PATH_KB_TEMPLATES"]))
     
 
 def apply_on_set(args: Dict[str, str], config: Dict[str, str]):
@@ -115,28 +114,20 @@ def new(args: Dict[str, str], config: Dict[str, str]):
     template_path = str(Path(config["PATH_KB_TEMPLATES"]) / args["template"])
     print(template_path)
     if fs.is_file(template_path):
-        resp_content = '{"Error":"' + "Template already exists" + '"}'
-        resp = make_response((resp_content), 409)
-        resp.mimetype = 'application/json'
-        return(resp)
+        print("ERROR: The template you inserted corresponds to an existing one. ",
+              "Please specify another name for the new template")
+        sys.exit(1)
 
-    #    print("ERROR: The template you inserted corresponds to an existing one. ",
-    #          "Please specify another name for the new template")
-    #    sys.exit(1)
-
+    
     fs.create_directory(Path(template_path).parent)
 
     with open(template_path, 'w') as tmplt:
         tmplt.write("# This is an example configuration template\n\n\n")
         tmplt.write(toml.dumps(conf.DEFAULT_TEMPLATE))
 
-    # shell_cmd = shlex.split(
-    #    config["EDITOR"]) + [template_path]
-    # call(shell_cmd)
-    resp_content = '{"OK":"' + "Default template content added" + '"}'
-    resp = make_response((resp_content), 200)
-    resp.mimetype = 'application/json'
-    return(resp)
+     shell_cmd = shlex.split(
+        config["EDITOR"]) + [template_path]
+     call(shell_cmd)
 
 
 def add(args: Dict[str, str], config: Dict[str, str], filecontent):
@@ -157,16 +148,13 @@ def add(args: Dict[str, str], config: Dict[str, str], filecontent):
     templates_path = Path(config["PATH_KB_TEMPLATES"])
     template_path = str(Path(config["PATH_KB_TEMPLATES"]) / args["title"])
     if fs.is_file(template_path):
-        resp_content = '{"Error":"' + "Template already exists" + '"}'
-        resp = make_response((resp_content), 409)
-        resp.mimetype = 'application/json'
-        return(resp)
+        print("ERROR: The template you inserted corresponds to an existing one. ",
+              "Please specify another name for the new template")
+        sys.exit(1)
 
     filecontent.save(os.path.join(templates_path, args["title"]))
-    resp = jsonify({'OK': 'Template successfully uploaded'})
-    resp.status_code = 200
-    resp.mimetype = 'application/json'
-    return (resp)
+        print("OK: The template has been successfully inserted")
+        sys.exit(0)
 
 
 def update_template(title: str, config: Dict[str, str], filecontent):
@@ -186,16 +174,13 @@ def update_template(title: str, config: Dict[str, str], filecontent):
     templates_path = Path(config["PATH_KB_TEMPLATES"])
     template_path = str(Path(config["PATH_KB_TEMPLATES"]) + "/" + title)
     if not fs.is_file(template_path):
-        resp_content = '{"Error":"' + "Template does not exist" + '"}'
-        resp = make_response((resp_content), 404)
-        resp.mimetype = MIME_TYPE['json']
-        return(resp)
+        print("ERROR: The template you inserted corresponds to an existing one. ",
+              "Please specify another name for the new template")
+        sys.exit(1)
 
     filecontent.save(os.path.join(templates_path, title))
-    resp_content = '{"OK":"' + "Template successfully updated" + '"}'
-    resp = make_response((resp_content), 200)
-    resp.mimetype = MIME_TYPE['json']
-    return (resp)
+    print("OK: The template has been successfully updated")
+        sys.exit(0)
 
 
 def delete(args: Dict[str, str], config: Dict[str, str]):
