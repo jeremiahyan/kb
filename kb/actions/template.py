@@ -5,7 +5,7 @@
 # See /LICENSE for licensing information.
 
 """
-kb template actions module
+kb template api module
 
 :Copyright: © 2020, alshapton.
 :License: GPLv3 (see /LICENSE).
@@ -44,20 +44,6 @@ def get_templates(templates_path: str) -> List[str]:
     """
     return fs.list_files(templates_path)
 
-
-def search(args: Dict[str, str], config: Dict[str, str]):
-    """
-    Search templates installed in kb.
-
-    Arguments:
-    args:           - a dictionary containing the following fields:
-                      query -> filter for the title field of the artifact
-    config:         - a configuration dictionary containing at least
-                      the following keys:
-                      PATH_KB_TEMPLATES     - the path to where the templates of KB
-                                              are stored
-    """
-    
 
 def apply_on_set(args: Dict[str, str], config: Dict[str, str]):
     """
