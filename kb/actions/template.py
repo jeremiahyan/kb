@@ -111,9 +111,9 @@ def new(args: Dict[str, str], config: Dict[str, str]):
         tmplt.write("# This is an example configuration template\n\n\n")
         tmplt.write(toml.dumps(conf.DEFAULT_TEMPLATE))
 
-     shell_cmd = shlex.split(
+    shell_cmd = shlex.split(
         config["EDITOR"]) + [template_path]
-     call(shell_cmd)
+    call(shell_cmd)
 
 
 def add(args: Dict[str, str], config: Dict[str, str], filecontent):
@@ -139,8 +139,8 @@ def add(args: Dict[str, str], config: Dict[str, str], filecontent):
         sys.exit(1)
 
     filecontent.save(os.path.join(templates_path, args["title"]))
-        print("OK: The template has been successfully inserted")
-        sys.exit(0)
+    print("OK: The template has been successfully inserted")
+    sys.exit(0)
 
 
 def update_template(title: str, config: Dict[str, str], filecontent):
@@ -166,7 +166,7 @@ def update_template(title: str, config: Dict[str, str], filecontent):
 
     filecontent.save(os.path.join(templates_path, title))
     print("OK: The template has been successfully updated")
-        sys.exit(0)
+    sys.exit(0)
 
 
 def delete(args: Dict[str, str], config: Dict[str, str]):
