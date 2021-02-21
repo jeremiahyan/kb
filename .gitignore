@@ -2,6 +2,7 @@
 __pycache__
 .aliases
 
+.idea
 # Virtual Environment
 env/
 venv/
